@@ -19,7 +19,8 @@ export const ExpandedGrid = ({ user }: ExpandedGridProps) => {
 
   const handleLogout = () => {
     clearAuth()
-    router.push("/")
+    // Refresh the page to reset all state and return to home
+    window.location.href = "/"
   }
 
   const ROLE_COLOR_MAP: Record<string, string> = {

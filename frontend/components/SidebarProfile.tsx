@@ -133,7 +133,7 @@ export function SidebarProfile() {
 
         {/* Expanded Section */}
         <AnimatePresence initial={false}>
-          {isOpen && (
+          {isOpen && decodedToken && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
