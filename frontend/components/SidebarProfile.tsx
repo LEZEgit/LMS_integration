@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Settings, User } from "lucide-react"
 import { useSidebar } from "@/components/ui/sidebar"
 import { useAuth } from "@/hooks/useAuth"
+import { useIsMobile } from "@/hooks/use-mobile"
 import {
   Popover,
   PopoverContent,
@@ -17,9 +18,13 @@ import { AvatarFallback, AvatarImage } from "./ui/avatar"
 export function SidebarProfile() {
   const [isOpen, setIsOpen] = useState(false)
   const { decodedToken } = useAuth()
-
-  // 1. Grab the current state of the sidebar (expanded or collapsed)
   const { state } = useSidebar()
+  const isMobileDevice = useIsMobile()
+
+  // Refs for tracking timers
+  const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null)
+
   const isCollapsed = state === "collapsed"
 
   // Role-based profile picture mapping
@@ -37,8 +42,56 @@ export function SidebarProfile() {
 
   const profileImage = PROFILE_IMAGE_MAP[user.role] || PROFILE_IMAGE_MAP.READER
 
-  // --- CONDITION 1: SIDEBAR IS COLLAPSED ---
-  if (isCollapsed) {
+  // Handle auto-close after 10 seconds and reset after 8 seconds of inactivity
+  useEffect(() => {
+    if (!isOpen) {
+      // Clear timers when closing
+      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current)
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+      return
+    }
+
+    // Set auto-close timer (10 seconds)
+    autoCloseTimerRef.current = setTimeout(() => {
+      setIsOpen(false)
+    }, 10000)
+
+    // Set inactivity timer (8 seconds) - will reset on activity
+    const setupInactivityTimer = () => {
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+      inactivityTimerRef.current = setTimeout(() => {
+        setIsOpen(false)
+      }, 8000)
+    }
+
+    setupInactivityTimer()
+
+    // Track activity with debouncing
+    const handleActivity = () => {
+      setupInactivityTimer()
+    }
+
+    // Use event delegation for efficiency - listen on the parent container
+    const container = document.querySelector("[data-sidebar-profile-container]")
+    if (container) {
+      container.addEventListener("mousemove", handleActivity)
+      container.addEventListener("click", handleActivity)
+      container.addEventListener("touchstart", handleActivity)
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("mousemove", handleActivity)
+        container.removeEventListener("click", handleActivity)
+        container.removeEventListener("touchstart", handleActivity)
+      }
+      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current)
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+    }
+  }, [isOpen])
+
+  // --- CONDITION 1: COLLAPSED SIDEBAR OR MOBILE DEVICE ---
+  if (isCollapsed || isMobileDevice) {
     return (
       <div className="mt-auto flex w-full items-center justify-center p-2">
         <Popover>
@@ -84,9 +137,9 @@ export function SidebarProfile() {
     )
   }
 
-  // --- CONDITION 2: SIDEBAR IS EXPANDED ---
+  // --- CONDITION 2: SIDEBAR IS EXPANDED AND NOT MOBILE ---
   return (
-    <div className="mt-auto w-full p-2">
+    <div className="mt-auto w-full p-2" data-sidebar-profile-container>
       <motion.div
         layout
         className="flex w-full cursor-pointer flex-col overflow-hidden border border-sidebar-border bg-sidebar-primary-foreground text-sidebar-foreground shadow-sm"

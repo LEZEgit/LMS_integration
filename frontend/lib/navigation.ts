@@ -1,4 +1,4 @@
-import { BarChart3, Book, BookMarked, BookSearch, LayoutDashboard, Search, Settings, Users } from "lucide-react"
+import { BarChart3, Book, BookMarked, BookSearch, LayoutDashboard, Users } from "lucide-react"
 import React from "react"
 
 // Match these exactly with your OpenAPI spec enums

@@ -8,8 +8,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 
@@ -20,10 +18,10 @@ import {
   UserRole,
   HomeItems,
 } from "@/lib/navigation"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { SidebarProfile } from "./SidebarProfile"
+import { MobileSidebarMenuItem } from "./MobileSidebarMenuItem"
 import SidebarHeaderT from "./SidebarHeaderT"
 
 export function AppSidebar() {
@@ -59,28 +57,26 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-              <SidebarGroupLabel>Home</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {HomeItems.map((item) => {
-                    const Icon = item.icon
-                    const isActive = pathname === item.href
+          <SidebarGroupLabel>Home</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {HomeItems.map((item) => {
+                const isActive = pathname === item.href
 
-                    return (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton asChild isActive={isActive}>
-                          <Link href={item.href}>
-                            <Icon />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    )
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarSeparator />
+                return (
+                  <MobileSidebarMenuItem
+                    key={item.href}
+                    href={item.href}
+                    icon={item.icon}
+                    title={item.title}
+                    isActive={isActive}
+                  />
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarSeparator />
         {overviewItems.length !== 0 ? (
           <>
             <SidebarGroup>
@@ -88,18 +84,16 @@ export function AppSidebar() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {overviewItems.map((item) => {
-                    const Icon = item.icon
                     const isActive = pathname === item.href
 
                     return (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton asChild isActive={isActive}>
-                          <Link href={item.href}>
-                            <Icon />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      <MobileSidebarMenuItem
+                        key={item.href}
+                        href={item.href}
+                        icon={item.icon}
+                        title={item.title}
+                        isActive={isActive}
+                      />
                     )
                   })}
                 </SidebarMenu>
@@ -117,18 +111,16 @@ export function AppSidebar() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {manageItems.map((item) => {
-                    const Icon = item.icon
                     const isActive = pathname === item.href
 
                     return (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton asChild isActive={isActive}>
-                          <Link href={item.href}>
-                            <Icon />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      <MobileSidebarMenuItem
+                        key={item.href}
+                        href={item.href}
+                        icon={item.icon}
+                        title={item.title}
+                        isActive={isActive}
+                      />
                     )
                   })}
                 </SidebarMenu>
@@ -145,18 +137,16 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {personalItems.map((item) => {
-                  const Icon = item.icon
                   const isActive = pathname === item.href
 
                   return (
-                    <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild isActive={isActive}>
-                        <Link href={item.href}>
-                          <Icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <MobileSidebarMenuItem
+                      key={item.href}
+                      href={item.href}
+                      icon={item.icon}
+                      title={item.title}
+                      isActive={isActive}
+                    />
                   )
                 })}
               </SidebarMenu>
