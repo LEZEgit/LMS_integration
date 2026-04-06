@@ -18,6 +18,7 @@ import {
   OverviewItems,
   PersonalItems,
   UserRole,
+  HomeItems,
 } from "@/lib/navigation"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -30,6 +31,7 @@ export function AppSidebar() {
   const { decodedToken } = useAuth()
 
   const currentRole: UserRole = decodedToken?.role || "READER"
+
   const manageItems = ManageItems.filter((item) =>
     item.allowedRoles.includes(currentRole)
   )
@@ -56,6 +58,29 @@ export function AppSidebar() {
         <SidebarHeaderT />
       </SidebarHeader>
       <SidebarContent>
+        <SidebarGroup>
+              <SidebarGroupLabel>Home</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {HomeItems.map((item) => {
+                    const Icon = item.icon
+                    const isActive = pathname === item.href
+
+                    return (
+                      <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton asChild isActive={isActive}>
+                          <Link href={item.href}>
+                            <Icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+            <SidebarSeparator />
         {overviewItems.length !== 0 ? (
           <>
             <SidebarGroup>

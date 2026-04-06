@@ -1,9 +1,5 @@
+import Home from "@/app/home/page"
 
-
-
-export default function Home() {
-  return (
-    <div>
-    </div>
-  )
+export default function RootPage() {
+  return <Home />
 }
