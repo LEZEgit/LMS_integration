@@ -6,6 +6,7 @@ import { LayoutContent } from "@/components/LayoutContent"
 import type { Metadata } from "next"
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google"
 import { cookies } from "next/headers"
+import { ReduxProvider } from "@/redux/provider"
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -48,7 +49,9 @@ export default async function RootLayout({
     >
       <body className="m-0 flex gap-1 p-0">
         <ThemeProvider>
-          <LayoutContent defaultOpen={defaultOpen}>{children}</LayoutContent>
+          <ReduxProvider>
+            <LayoutContent defaultOpen={defaultOpen}>{children}</LayoutContent>
+          </ReduxProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -3,6 +3,7 @@ import { useCurrentPage } from "@/lib/use-current-page"
 import { useSidebar } from "@/components/ui/sidebar"
 import { useAuth } from "@/hooks/useAuth"
 import { usePathname } from "next/navigation"
+import { Button } from "./ui/button"
 import Link from "next/link"
 import { Menu, Home } from "lucide-react"
 import { ModeToggle } from "./DarkModeToggle"
@@ -30,7 +31,7 @@ const Navbar = () => {
       {/* center - page title */}
       <div className="flex-1 text-center md:flex-none md:text-left">
         <h1 className="text-lg font-semibold text-foreground">
-          {currentPage ? currentPage.title : "Log In"}
+          {currentPage?.title}
         </h1>
       </div>
 
@@ -39,7 +40,7 @@ const Navbar = () => {
         {/* home icon (show when authenticated and not on home route) */}
         {isAuthenticated && !isHomeRoute && (
           <Link
-            href="/"
+            href="/home"
             className="rounded-md p-2 transition-colors hover:bg-accent"
             aria-label="Go to home"
             title="Home"
@@ -48,6 +49,12 @@ const Navbar = () => {
           </Link>
         )}
         <ModeToggle />
+        {/* Login Button - only show for unauthenticated users */}
+        {!isAuthenticated && (
+          <Button asChild size="lg">
+            <Link href="/login">Log In</Link>
+          </Button>
+        )}
       </div>
     </nav>
   )
